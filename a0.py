@@ -14,13 +14,6 @@ def main():
         print("+-+")
         print(f"{space(count)}" + "| |")
         print(f"{space(count)}" + "+-", end='')
-    #     print(f"{rect()} + {tab(count)}", end='')
-    #     # if count == 0:
-    #     #     diagonal_rect = rectangle()
-    #     #     print(diagonal_rect)
-    #     # else:
-    #     #     diagonal_rect += rectangle()
-    #     #     print(diagonal_rect)
         count +=1
     print("+\n")
 
