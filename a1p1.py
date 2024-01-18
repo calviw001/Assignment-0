@@ -28,7 +28,9 @@ def show_files_by_extension(a_path, file_type):
     for content in directory_contents:
         each_path = a_path + os.path.sep + content
         if os.path.isfile(each_path):
-            if file_type in content:
+            content_tokens = content.split('.')
+            content_extension = content_tokens[-1]
+            if file_type == content_extension:
                 print(each_path)
 
 
