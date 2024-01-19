@@ -2,40 +2,47 @@
 # import os
 from pathlib import Path
 
-def show_files_then_directories(a_path):
-    # a_path = Path(a_path)
+def list_of_paths(a_path):
+    paths_list = []
     for each_path in a_path.iterdir():
+        paths_list.append(each_path)
+    return paths_list
+
+
+def show_files_then_directories(paths_list):
+    # a_path = Path(a_path)
+    for each_path in paths_list:
         if each_path.is_file():
             print(each_path)
-    for each_path in a_path.iterdir():
+    for each_path in paths_list:
         if each_path.is_dir():
             print(each_path)
 
 
-def show_files_only(a_path):
+def show_files_only(paths_list):
     # a_path = Path(a_path)
-    for each_path in a_path.iterdir():
+    for each_path in paths_list:
         if each_path.is_file():
             print(each_path)
-    
+                
 
-def show_files_by_extension(a_path, specific_file_type):
-    for each_path in a_path.iterdir():
-        if each_path.is_file():
-            each_path_as_string = str(each_path)
-            get_file_extension = each_path_as_string.split('.')
-            file_extension = get_file_extension[-1]
-            if specific_file_type == file_extension:
-                print(each_path)
-            
-
-def show_files_by_name(a_path, specific_file_name):
-    for each_path in a_path.iterdir():
+def show_files_by_name(paths_list, specific_file_name):
+    for each_path in paths_list:
         if each_path.is_file():
             each_path_as_string = str(each_path)
             get_file_name = each_path_as_string.split('\\')
             file_name = get_file_name[-1]
             if specific_file_name == file_name:
+                print(each_path)
+
+
+def show_files_by_extension(paths_list, specific_file_type):
+    for each_path in paths_list:
+        if each_path.is_file():
+            each_path_as_string = str(each_path)
+            get_file_extension = each_path_as_string.split('.')
+            file_extension = get_file_extension[-1]
+            if specific_file_type == file_extension:
                 print(each_path)
 
 
@@ -55,33 +62,27 @@ def program_command():
             break
         elif user_input_tokens[0] == 'L' and len(user_input_tokens) > 1:
             user_path = Path(user_input_tokens[1])
+            paths_list = list_of_paths(user_path)
+            #print(paths_list)
             if len(user_input_tokens) == 2:
-                show_files_then_directories(user_path)
+                show_files_then_directories(paths_list)
                 print()
             elif user_input_tokens[2] == '-f':
-                show_files_only(user_path)
+                show_files_only(paths_list)
                 print()
             elif user_input_tokens[2] == '-s':
                 name = get_given_name(user_input, '-s')
-                show_files_by_name(user_path, name)
+                show_files_by_name(paths_list, name)
                 print()
             elif user_input_tokens[2] == '-e':
-                show_files_by_extension(user_path, user_input_tokens[3])
+                show_files_by_extension(paths_list, user_input_tokens[3])
                 print()
         
 
 def main():
     program_command()
-    # user_input = 'L C:\\Users\\cowvy\\OneDrive\\UCI\\Writing -f GA final draft guide.pdf'
-    # user_input = input()
-    # path = user_input.split()
-    # show_files_then_directories(path[1])
-    # print()
-    # show_files_only(path[1])
-    # print()
-    # show_files_by_name(path[1], "GA final draft guide.pdf")
-    # print()
-    # show_files_by_extension(path[1], "pdf")
-
+    # user_input = 'L C:\\Users\\cowvy\\OneDrive\\UCI\\Writing -s GA final draft guide.pdf'
+    # user_input = 'L C:\\Users\\cowvy\\OneDrive\\UCI\\Writing -f'
+   
 
 main()
