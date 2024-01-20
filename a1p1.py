@@ -102,8 +102,6 @@ def program_command():
 
 def main():
     program_command()
-    # user_input = 'L C:\\Users\\cowvy\\OneDrive\\UCI\\Writing -s GA final draft guide.pdf'
-    # user_input = 'L C:\\Users\\cowvy\\OneDrive\\UCI\\Writing -r'
    
 
 main()
