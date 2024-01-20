@@ -58,7 +58,7 @@ def recur_list_of_paths(my_path, recur_paths_list):
     return recur_paths_list
 
 
-def get_given_name(user_input, L_option):
+def get_given(user_input, L_option):
     the_option = user_input.find(L_option)
     given = user_input[(the_option+3):]
     return given
@@ -67,7 +67,7 @@ def get_given_name(user_input, L_option):
 def program_command():
     while True:
         user_input = input()
-        user_input_tokens = user_input.split()
+        user_input_tokens = (user_input.strip()).split()
         paths_list = []
         recursive = False
 
@@ -92,11 +92,12 @@ def program_command():
                 show_files_only(paths_list)
                 print()
             elif user_input_tokens[2] == '-s':
-                name = get_given_name(user_input, '-s')
+                name = get_given(user_input, '-s')
                 show_files_by_name(paths_list, name)
                 print()
             elif user_input_tokens[2] == '-e':
-                show_files_by_extension(paths_list, user_input_tokens[3])
+                extension = get_given(user_input, '-e')
+                show_files_by_extension(paths_list, extension)
                 print()
    
 
