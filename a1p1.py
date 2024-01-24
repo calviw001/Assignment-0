@@ -97,7 +97,7 @@ def read_file(path_name):
     try:
         if is_dsu[-1] == 'dsu':
             with path_name.open(mode = 'r') as dsu_file:
-                content = dsu_file
+                content = dsu_file.read()
                 if path_name.stat().st_size == 0:
                     print("EMPTY")  
                 else:
