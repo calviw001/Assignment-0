@@ -64,6 +64,41 @@ def get_given(user_input, L_option):
     return given
 
 
+def create_file(path_name, file_name):
+    separator_with_pathlib = Path("/").as_posix()
+    new_path = str(path_name) + separator_with_pathlib + file_name + '.dsu'
+    new_path = Path(new_path)
+    new_path.touch()
+    if new_path.exists():
+        print(new_path)
+
+
+def delete_file(path_name):
+    path_as_string = str(path_name)
+    is_dsu = path_as_string.split('.')
+    try:
+        if is_dsu[-1] == 'dsu':
+            path_name.unlink()
+            print(path_as_string, 'DELETED')
+        else:
+            print('ERROR')
+    except:
+        raise "ERROR"
+
+
+def read_file(path_name):
+    #path_as_string = str(path_name)
+    try:
+        with path_name.open(mode = 'r') as dsu_file:
+            content = dsu_file
+            if path_name.stat().st_size == 0:
+                print("EMPTY")  
+            else:
+                print(content)
+    except:
+        raise "ERROR"
+
+
 def program_command():
     while True:
         user_input = input()
@@ -99,6 +134,21 @@ def program_command():
                 extension = get_given(user_input, '-e')
                 show_files_by_extension(paths_list, extension)
                 print()
+        
+        # PART 2
+        elif user_input_tokens[0] == 'C' and len(user_input_tokens) > 1:
+            user_path = Path(user_input_tokens[1])
+            file_name = user_input_tokens[3]
+            create_file(user_path, file_name)
+            print()
+        elif user_input_tokens[0] == 'D' and len(user_input_tokens) == 2:
+            user_path = Path(user_input_tokens[1])
+            delete_file(user_path)
+            print()
+        elif user_input_tokens[0] == 'R' and len(user_input_tokens) == 2:
+            user_path = Path(user_input_tokens[1])
+            read_file(user_path)
+            print()
    
 
 def main():
