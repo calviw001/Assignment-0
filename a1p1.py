@@ -64,6 +64,10 @@ def get_given(user_input, L_option):
     return given
 
 
+# class CustomError(Exception):
+#     def __init__(self, message="ERROR"):
+#         self.message = message
+
 def create_file(path_name, file_name):
     separator_with_pathlib = Path("/").as_posix()
     new_path = str(path_name) + separator_with_pathlib + file_name + '.dsu'
@@ -81,23 +85,32 @@ def delete_file(path_name):
             path_name.unlink()
             print(path_as_string, 'DELETED')
         else:
-            print('ERROR')
-    except:
-        raise "ERROR"
+            # Not a dsu file
+            print("ERROR")
+    except FileNotFoundError:
+        print("ERROR")
 
 
 def read_file(path_name):
-    #path_as_string = str(path_name)
+    path_as_string = str(path_name)
+    is_dsu = path_as_string.split('.')
     try:
-        with path_name.open(mode = 'r') as dsu_file:
-            content = dsu_file
-            if path_name.stat().st_size == 0:
-                print("EMPTY")  
-            else:
-                print(content)
-    except:
-        raise "ERROR"
+        if is_dsu[-1] == 'dsu':
+            with path_name.open(mode = 'r') as dsu_file:
+                content = dsu_file
+                if path_name.stat().st_size == 0:
+                    print("EMPTY")  
+                else:
+                    print(content)
+        else:
+            # Not a dsu file
+            print("ERROR")
+    except FileNotFoundError:
+        print("ERROR")
 
+
+def check_if_path_exist(path_name):
+    return path_name.exists()
 
 def program_command():
     while True:
@@ -106,11 +119,15 @@ def program_command():
         paths_list = []
         recursive = False
 
+        # PART 1
         if user_input_tokens[0] == 'Q':
             break
         elif user_input_tokens[0] == 'L' and len(user_input_tokens) > 1:
             user_path = Path(user_input_tokens[1])
-            if len(user_input_tokens) >= 3 and user_input_tokens[2] == '-r':
+            if not check_if_path_exist(user_path):
+                print("ERROR")
+                print()
+            elif len(user_input_tokens) >= 3 and user_input_tokens[2] == '-r':
                 paths_list = recur_list_of_paths(user_path, paths_list)
                 recursive = True
                 user_input_tokens.remove('-r')
@@ -136,19 +153,21 @@ def program_command():
                 print()
         
         # PART 2
-        elif user_input_tokens[0] == 'C' and len(user_input_tokens) > 1:
+        else:
             user_path = Path(user_input_tokens[1])
-            file_name = user_input_tokens[3]
-            create_file(user_path, file_name)
-            print()
-        elif user_input_tokens[0] == 'D' and len(user_input_tokens) == 2:
-            user_path = Path(user_input_tokens[1])
-            delete_file(user_path)
-            print()
-        elif user_input_tokens[0] == 'R' and len(user_input_tokens) == 2:
-            user_path = Path(user_input_tokens[1])
-            read_file(user_path)
-            print()
+            if not check_if_path_exist(user_path):
+                print("ERROR")
+                print()
+            elif user_input_tokens[0] == 'C' and len(user_input_tokens) > 1:
+                file_name = user_input_tokens[3]
+                create_file(user_path, file_name)
+                print()
+            elif user_input_tokens[0] == 'D' and len(user_input_tokens) == 2:
+                delete_file(user_path)
+                print()
+            elif user_input_tokens[0] == 'R' and len(user_input_tokens) == 2:
+                read_file(user_path)
+                print()
    
 
 def main():
