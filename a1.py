@@ -144,7 +144,7 @@ def program_command():
         # PART 1
         if user_input[0] == 'Q':
             break
-        elif user_input[0] == 'L':
+        elif user_input[0] == 'L' and len(path_input) > 0:
             user_path = Path(path_input)
             if not check_if_path_exist(user_path):
                 print("ERROR")
