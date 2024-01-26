@@ -155,7 +155,7 @@ def program_command():
                 recursive = True
                 remove_r = others[2:]
                 others = remove_r.strip()
-                print(others)
+                # print(others)
             else:
                 paths_list = list_of_paths(user_path)
             
