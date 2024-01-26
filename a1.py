@@ -1,6 +1,26 @@
 from pathlib import Path
 
 
+def get_user_inputs(user_input):
+    tokens = user_input.split(" ", 1)
+    if len(tokens) == 1:
+        return "", ""
+    else:
+        potential_path = tokens[1]
+        
+        while True:
+            if Path(potential_path).exists():
+                break
+            else:
+                potential_path = potential_path[0:-1]
+        
+        #print(potential_path)
+        path_length = len(potential_path)
+        others = tokens[1][path_length:]
+        #print(others)
+        return potential_path.strip(), others.strip()
+
+
 def list_of_paths(a_path):
     paths_list = []
     for each_path in a_path.iterdir():
@@ -58,15 +78,14 @@ def recur_list_of_paths(my_path, recur_paths_list):
     return recur_paths_list
 
 
-def get_given(user_input, L_option):
-    the_option = user_input.find(L_option)
-    given = user_input[(the_option+3):]
+def get_given(others):
+    others_tokens = others.split(" ", 1)
+    try:
+        given = others_tokens[1]
+    except IndexError:
+        given =""
     return given
 
-
-# class CustomError(Exception):
-#     def __init__(self, message="ERROR"):
-#         self.message = message
 
 def create_file(path_name, file_name):
     separator_with_pathlib = Path("/").as_posix()
@@ -85,9 +104,8 @@ def delete_file(path_name):
             path_name.unlink()
             print(path_as_string, 'DELETED')
         else:
-            # Not a dsu file
-            print("ERROR")
-    except FileNotFoundError:
+            assert is_dsu[-1] == 'dsu'
+    except (FileNotFoundError, AssertionError):
         print("ERROR")
 
 
@@ -103,9 +121,8 @@ def read_file(path_name):
                 else:
                     print(content)
         else:
-            # Not a dsu file
-            print("ERROR")
-    except FileNotFoundError:
+            assert is_dsu[-1] == 'dsu'
+    except (FileNotFoundError, AssertionError):
         print("ERROR")
 
 
@@ -115,59 +132,75 @@ def check_if_path_exist(path_name):
 def program_command():
     while True:
         user_input = input()
-        user_input_tokens = (user_input.strip()).split()
+        user_input = user_input.strip()
+        # user_input_tokens = (user_input.strip()).split()
         paths_list = []
+        path_input, others = get_user_inputs(user_input)
+        # print(path_input)
+        # print(others)
         recursive = False
+        
 
         # PART 1
-        if user_input_tokens[0] == 'Q':
+        if user_input[0] == 'Q':
             break
-        elif user_input_tokens[0] == 'L' and len(user_input_tokens) > 1:
-            user_path = Path(user_input_tokens[1])
+        elif user_input[0] == 'L':
+            user_path = Path(path_input)
             if not check_if_path_exist(user_path):
                 print("ERROR")
-                print()
-            elif len(user_input_tokens) >= 3 and user_input_tokens[2] == '-r':
+                #print()
+            elif others[0:2] == '-r':
                 paths_list = recur_list_of_paths(user_path, paths_list)
+                # print(paths_list)
                 recursive = True
-                user_input_tokens.remove('-r')
+                remove_r = others[2:]
+                others = remove_r.strip()
+                print(others)
             else:
                 paths_list = list_of_paths(user_path)
             
-            if len(user_input_tokens) == 2 and not recursive:
+            if not recursive and others == "":
                 show_files_then_directories(paths_list)
-                print()
-            elif len(user_input_tokens) == 2 and recursive:
+                #print()
+            elif recursive and others == "":
                 show_files_and_directories(paths_list)
-                print()
-            elif user_input_tokens[2] == '-f':
+                #print()
+            elif others[0:2] == '-f':
                 show_files_only(paths_list)
-                print()
-            elif user_input_tokens[2] == '-s':
-                name = get_given(user_input, '-s')
+                #print()
+            elif others[0:2] == '-s':
+                name = get_given(others)
+                print(name)
                 show_files_by_name(paths_list, name)
-                print()
-            elif user_input_tokens[2] == '-e':
-                extension = get_given(user_input, '-e')
+                #print()
+            elif others[0:2] == '-e':
+                extension = get_given(others)
+                print(extension)
                 show_files_by_extension(paths_list, extension)
-                print()
+                #print()
+            else:
+                print("ERROR")
+                #print()
         
         # PART 2
         else:
-            user_path = Path(user_input_tokens[1])
+            user_path = Path(path_input.strip())
             if not check_if_path_exist(user_path):
                 print("ERROR")
-                print()
-            elif user_input_tokens[0] == 'C' and len(user_input_tokens) > 1:
-                file_name = user_input_tokens[3]
+                #print()
+            elif user_input[0] == 'C' and others[0:2] == '-n':
+                file_name = get_given(others)
                 create_file(user_path, file_name)
-                print()
-            elif user_input_tokens[0] == 'D' and len(user_input_tokens) == 2:
+                #print()
+            elif user_input[0] == 'D':
                 delete_file(user_path)
-                print()
-            elif user_input_tokens[0] == 'R' and len(user_input_tokens) == 2:
+                #print()
+            elif user_input[0] == 'R':
                 read_file(user_path)
-                print()
+                #print()
+            else:
+                print("ERROR")
+                #print()
    
 
 def main():
