@@ -170,12 +170,12 @@ def program_command():
                 #print()
             elif others[0:2] == '-s':
                 name = get_given(others)
-                print(name)
+                # print(name)
                 show_files_by_name(paths_list, name)
                 #print()
             elif others[0:2] == '-e':
                 extension = get_given(others)
-                print(extension)
+                # print(extension)
                 show_files_by_extension(paths_list, extension)
                 #print()
             else:
